@@ -3,36 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title Here</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <title>Plotly Graph Example</title>
+    <!-- Plotly CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 </head>
 <body>
-    <header>
-        <h1>Your Website Title</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <table id="parameters">
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>TTR6month</td>
+            <td>90</td>
+        </tr>
+        <tr>
+            <td>TTR12month</td>
+            <td>70</td>
+        </tr>
+        <tr>
+            <td>DNAs 12 months</td>
+            <td>3</td>
+        </tr>
+    </table>
+    
 
-    <main>
-        <section>
-            <h2>Section 1</h2>
-            <p>This is the content of section 1.</p>
-        </section>
+<div id="6monthplot"></div>
+<div id="prior6monthplot"></div>
+<div id="12monthplot"></div>
+    <script>
+        // Get the value from the second column and second row
+        var table = document.getElementById('parameters');
+        var cell1 = table.rows[1].cells[1]; // Second row, second column
+        var cell2 = table.rows[2].cells[1]; // Second row, second column
+        var tir6 = cell1.textContent;
+        var tir12 = cell2.textContent;
+        var prior6TTR = (tir12*2)-tir6;
+        console.log("Value from second column and second row:", prior6TTR);
 
-        <section>
-            <h2>Section 2</h2>
-            <p>This is the content of section 2.</p>
-        </section>
-    </main>
+    var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: tir6,
+    title: { text: "Last 6 month TTR (%)", font: { size: 14} },
+    delta: { reference: prior6TTR, increasing: { color: "RebeccaPurple" } },
+    gauge: {
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 29], color: "lightpink" },
+        { range: [30, 69], color: "lightyellow" },
+        { range: [70, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
 
-    <footer>
-        <p>&copy; 2024 Your Website</p>
-    </footer>
+var layout = {
+  width: 300,
+  height: 200,
+  margin: { t: 25, r: 35, l: 30, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('6monthplot', data, layout);
+
+
+var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: prior6TTR,
+    title: { text: "Prior 6 month TTR (%)", font: { size: 14} },
+    delta: { reference: prior6TTR, increasing: { color: "RebeccaPurple" } },
+    gauge: {
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 29], color: "lightpink" },
+        { range: [30, 69], color: "lightyellow" },
+        { range: [70, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 300,
+  height: 200,
+  margin: { t: 25, r: 35, l: 30, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('prior6monthplot', data, layout);
+
+
+
+var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: tir12,
+    title: { text: "12 month TTR (%)", font: { size: 14} },
+    delta: { reference: tir12, increasing: { color: "RebeccaPurple" } },
+    gauge: {
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 29], color: "lightpink" },
+        { range: [30, 69], color: "lightyellow" },
+        { range: [70, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 300,
+  height: 200,
+  margin: { t: 25, r: 35, l: 30, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('12monthplot', data, layout);
+
+</script>
+
 </body>
 </html>
+
