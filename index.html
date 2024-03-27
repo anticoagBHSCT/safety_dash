@@ -16,63 +16,142 @@
         </tr>
         <tr>
             <td>TTR6month</td>
-            <td>90</td>
+            <td>45</td>
         </tr>
         <tr>
             <td>TTR12month</td>
             <td>70</td>
         </tr>
         <tr>
-            <td>DNAs 12 months</td>
-            <td>3</td>
+          <td>VGR 3 month</td>
+          <td>0.3</td>
         </tr>
+        <tr>
+            <td>DNAs 12 months</td>
+            <td>2
+            </td>
+        </tr>
+        <tr>
+          <td>INRs 12 months</td>
+          <td>40
+          </td>
+      </tr>
     </table>
-    
+    <hr>
+<table>
+  <tr>
+    <td>TTR 6 month<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus. Lacinia quis vel eros donec ac odio. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Sagittis orci a scelerisque purus. Imperdiet dui accumsan sit amet nulla facilisi. Aliquam sem et tortor consequat id porta nibh. Aliquet nec ullamcorper sit amet risus. Faucibus turpis in eu mi. Massa sapien faucibus et molestie ac feugiat sed lectus vestibulum. Enim sed faucibus turpis in eu mi. Montes nascetur ridiculus mus mauris vitae ultricies.</p></td>
+    <td><div id="6monthplot"></div></td>
+  </tr>
+  <tr>
+    <td>Variance Growth Rate</td>
+    <td><div id="vgrplot"></div></td>
+  </tr>
+  <tr>
+    <td>TTR 6 month prior</td>
+    <td><div id="prior6monthplot"></div></td>
+  </tr>
+  <tr>
+    <td>TTR 12 month</td>
+    <td><div id="12monthplot"></div></td>
+  </tr>
+  <tr>
+    <td>Attendance 12 month</td>
+    <td><div id="dNAplot"></div></td>
+  </tr>
+</table>
 
-<div id="6monthplot"></div>
-<div id="prior6monthplot"></div>
-<div id="12monthplot"></div>
+
+
     <script>
         // Get the value from the second column and second row
         var table = document.getElementById('parameters');
         var cell1 = table.rows[1].cells[1]; // Second row, second column
-        var cell2 = table.rows[2].cells[1]; // Second row, second column
+        var cell2 = table.rows[2].cells[1];
+        var cell3 = table.rows[3].cells[1];
+        var cell4 = table.rows[4].cells[1];
+        var cell5 = table.rows[5].cells[1];
         var tir6 = cell1.textContent;
+        var vgr = cell3.textContent;
         var tir12 = cell2.textContent;
         var prior6TTR = (tir12*2)-tir6;
-        console.log("Value from second column and second row:", prior6TTR);
+        var dna12 = parseInt(cell4.textContent);
+        var inr12 = parseInt(cell5.textContent);
+        var att = inr12/(inr12+dna12)*100;
+        var avweek = (Math.round((inr12/52)*100)/100);
+        //console.log("att:", avweek);
 
+
+ //--- TTR 6 month plot below   
     var data = [
   {
     type: "indicator",
     mode: "gauge+number+delta",
     value: tir6,
-    title: { text: "Last 6 month TTR (%)", font: { size: 14} },
-    delta: { reference: prior6TTR, increasing: { color: "RebeccaPurple" } },
+    title: { text: "6 month TTR", font: { size: 14} },
+    number: {suffix:"%", valueformat: '.0f'},
+    delta: { reference: prior6TTR, increasing: { color: "Green"}, decreasing: { color: "Pink"}, relative:true },
     gauge: {
-      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      shape: "bullet",
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
       bar: { color: "green" },
       bgcolor: "white",
       borderwidth: 2,
       bordercolor: "gray",
       steps: [
-        { range: [0, 29], color: "lightpink" },
-        { range: [30, 69], color: "lightyellow" },
-        { range: [70, 100], color: "lightgreen" }
+        { range: [0, 52], color: "lightpink" },
+        { range: [53, 72], color: "lightyellow" },
+        { range: [73, 100], color: "lightgreen" }
       ]
     }
   }
 ];
 
 var layout = {
-  width: 300,
-  height: 200,
-  margin: { t: 25, r: 35, l: 30, b: 25 },
+  width: 400,
+  height: 100,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
   paper_bgcolor: "white",
   font: { color: "black", family: "Arial" }
 };
 
 Plotly.newPlot('6monthplot', data, layout);
+
+//------VGR plot below
+
+var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: vgr,
+    title: { text: "VGR", font: { size: 14} },
+    gauge: {
+      shape: "bullet",
+      axis: { range: [null, 1], tickwidth: 1, tickcolor: "darkblue"},
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 0.14], color: "lightgreen" },
+        { range: [0.15, 0.44], color: "lightyellow" },
+        { range: [0.45, 1], color: "lightpink" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 400,
+  height: 100,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('vgrplot', data, layout);
+
+//--Prior 6 month TTR plot below----
 
 
 var data = [
@@ -80,27 +159,29 @@ var data = [
     type: "indicator",
     mode: "gauge+number+delta",
     value: prior6TTR,
-    title: { text: "Prior 6 month TTR (%)", font: { size: 14} },
-    delta: { reference: prior6TTR, increasing: { color: "RebeccaPurple" } },
+    title: { text: "Prior 6 month</br></br>TTR", font: { size: 14} },
+    number: {suffix:"%", valueformat: '.0f'},
+    delta: { reference: prior6TTR, increasing: { color: "RebeccaPurple"} },
     gauge: {
-      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      shape: "bullet",
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
       bar: { color: "green" },
       bgcolor: "white",
       borderwidth: 2,
       bordercolor: "gray",
       steps: [
-        { range: [0, 29], color: "lightpink" },
-        { range: [30, 69], color: "lightyellow" },
-        { range: [70, 100], color: "lightgreen" }
+      { range: [0, 52], color: "lightpink" },
+        { range: [53, 72], color: "lightyellow" },
+        { range: [73, 100], color: "lightgreen" }
       ]
     }
   }
 ];
 
 var layout = {
-  width: 300,
-  height: 200,
-  margin: { t: 25, r: 35, l: 30, b: 25 },
+  width: 400,
+  height: 100,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
   paper_bgcolor: "white",
   font: { color: "black", family: "Arial" }
 };
@@ -108,38 +189,77 @@ var layout = {
 Plotly.newPlot('prior6monthplot', data, layout);
 
 
+//------TTR 12 month plot below
 
 var data = [
   {
     type: "indicator",
     mode: "gauge+number+delta",
     value: tir12,
-    title: { text: "12 month TTR (%)", font: { size: 14} },
+    title: { text: "12 month TTR", font: { size: 14} },
+    number: {suffix:"%", valueformat: '.0f'},
     delta: { reference: tir12, increasing: { color: "RebeccaPurple" } },
     gauge: {
-      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue" },
+      shape: "bullet",
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
       bar: { color: "green" },
       bgcolor: "white",
       borderwidth: 2,
       bordercolor: "gray",
       steps: [
-        { range: [0, 29], color: "lightpink" },
-        { range: [30, 69], color: "lightyellow" },
-        { range: [70, 100], color: "lightgreen" }
+      { range: [0, 52], color: "lightpink" },
+        { range: [53, 72], color: "lightyellow" },
+        { range: [73, 100], color: "lightgreen" }
       ]
     }
   }
 ];
 
 var layout = {
-  width: 300,
-  height: 200,
-  margin: { t: 25, r: 35, l: 30, b: 25 },
+  width: 400,
+  height: 100,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
   paper_bgcolor: "white",
   font: { color: "black", family: "Arial" }
 };
 
 Plotly.newPlot('12monthplot', data, layout);
+
+//------Non-attendances 12 month plot below
+var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: att,
+    title: { text: "Attendances", font: { size: 14} },
+    number: {suffix:"%", valueformat: '.0f'},
+    //delta: { reference: tir12, increasing: { color: "RebeccaPurple" } },
+    gauge: {
+      shape: "bullet",
+      axis: { range: [90, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+      { range: [0, 90], color: "white" },
+      { range: [90, 95], color: "lightpink" },
+        { range: [95, 98], color: "lightyellow" },
+        { range: [98, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 400,
+  height: 100,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('dNAplot', data, layout);
 
 </script>
 
