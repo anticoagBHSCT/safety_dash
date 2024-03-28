@@ -3,12 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plotly Graph Example</title>
-    <!-- Plotly CDN -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Patient Safety Dashboard</title>
+    <style>
+      @media print {
+          .header {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              background-color: #f0f0f0; /* Customize header background color */
+              padding: 10px; /* Add padding for spacing */
+              text-align: center; /* Center-align header content */
+          }
+
+          .footer {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              background-color: #f0f0f0; /* Customize footer background color */
+              padding: 10px; /* Add padding for spacing */
+              text-align: center; /* Center-align footer content */
+          }
+      }
+      @media screen {
+          .header,
+          .footer {
+              display: none;
+          }
+      }
+  </style>
+    <script>
+      window.onload = function () {
+          const pageNums = document.querySelectorAll('.pagenum');
+          pageNums.forEach((el, index) => {
+              el.textContent = index + 1;
+          });
+      };
+  </script>
+  <!-- Plotly CDN -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
 
 </head>
 <body>
+  <div class="header">Patient Safety Dashboard</div>
+  <div class="content">
     <table id="parameters">
         <tr>
             <th>Parameter</th>
@@ -28,35 +68,89 @@
         </tr>
         <tr>
             <td>DNAs 12 months</td>
-            <td>2
-            </td>
+            <td>2</td>
         </tr>
         <tr>
           <td>INRs 12 months</td>
-          <td>40
-          </td>
+          <td>40</td>
+      </tr>
+      <tr>
+        <td>TTR start date</td>
+        <td>27/04/2023</td>
       </tr>
     </table>
     <hr>
 <table>
   <tr>
-    <td>TTR 6 month<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus. Lacinia quis vel eros donec ac odio. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Sagittis orci a scelerisque purus. Imperdiet dui accumsan sit amet nulla facilisi. Aliquam sem et tortor consequat id porta nibh. Aliquet nec ullamcorper sit amet risus. Faucibus turpis in eu mi. Massa sapien faucibus et molestie ac feugiat sed lectus vestibulum. Enim sed faucibus turpis in eu mi. Montes nascetur ridiculus mus mauris vitae ultricies.</p></td>
+    <td>
+      <p><b>Time in Therapeutic Range (TTR) 6 month</b></p>
+      <p>TTR' or 'Time in Therapeutic Range' is a way of measuring how effectively controlled anticoagulation has been over a period of time. Ideally if INRs were always in range the TTR would be 100% but due to the nature of anticoagulants
+        this is not usually possible.
+      </p>
+      <!--This is the value table-->
+      <table>
+        <tr>
+          <td><small>INRs: 8</small></td>
+          <td><small>From: 28/09/2023</small></td>
+        </tr>
+      </table>
+    </td>
     <td><div id="6monthplot"></div></td>
   </tr>
   <tr>
-    <td>Variance Growth Rate</td>
+    <td>
+      <p><b>Variance Growth Rate 3 month</b></p>
+      <p>The VGR measurements look at the variability between the INR values to determine how ‘stable’ they are. The VGR value increases when the difference betweem the recorded INRs to the target INR increases</p>
+      <!--This is the value table-->
+      <table>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </td>
     <td><div id="vgrplot"></div></td>
   </tr>
   <tr>
-    <td>TTR 6 month prior</td>
+    <td><p><b>TTR 6 month prior</b></p>
+      <p>If we have more INRs recorded we can compare against the previous 6 months TTR value.</p>
+        <!--This is the value table-->
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>  
+    </td>
     <td><div id="prior6monthplot"></div></td>
   </tr>
   <tr>
-    <td>TTR 12 month</td>
+    <td>
+      <p><b>TTR 12 month</b></p>
+       <p>The is the TTR value for the past year if INRs have been recorded for that long.</p> 
+      <!--This is the value table-->
+      <table>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </td>
     <td><div id="12monthplot"></div></td>
   </tr>
   <tr>
-    <td>Attendance 12 month</td>
+    <td>
+      <p><b>Attendance 12 month</b></p>
+      <p>It is important to attend for INR checks, if you are attending BCH clinic either virtually or in-person to Wing K.</p>
+      <!--This is the value table-->
+      <table>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>      
+
+    </td>
     <td><div id="dNAplot"></div></td>
   </tr>
 </table>
@@ -64,23 +158,37 @@
 
 
     <script>
-        // Get the value from the second column and second row
+        // Get the values from table
         var table = document.getElementById('parameters');
         var cell1 = table.rows[1].cells[1]; // Second row, second column
         var cell2 = table.rows[2].cells[1];
         var cell3 = table.rows[3].cells[1];
         var cell4 = table.rows[4].cells[1];
         var cell5 = table.rows[5].cells[1];
+        var cell6 = table.rows[6].cells[1]; 
+
+        //--6 month TTR and 2 month VGR
         var tir6 = cell1.textContent;
         var vgr = cell3.textContent;
-        var tir12 = cell2.textContent;
-        var prior6TTR = (tir12*2)-tir6;
-        var dna12 = parseInt(cell4.textContent);
-        var inr12 = parseInt(cell5.textContent);
-        var att = inr12/(inr12+dna12)*100;
-        var avweek = (Math.round((inr12/52)*100)/100);
-        //console.log("att:", avweek);
+    
+  
+//--prior 6 month and 12 month TTR only if 11 months data
+        const [day, month, year] = (cell6.textContent).split('/');
+        const ttrstart = new Date(year, month-1, day);   
+        var minus11months = new Date();
+          minus11months.setMonth(minus11months.getMonth()-11);
 
+        if(ttrstart < minus11months){
+         var tir12 = cell2.textContent;
+         var prior6TTR= (tir12*2)-tir6;        
+        }
+
+//--this block for attendance        
+        var inr12 = parseInt(cell5.textContent);  
+        var dna12 = parseInt(cell4.textContent);      
+        var att = inr12/(inr12+dna12)*100;
+
+        var avweek = (Math.round((inr12/52)*100)/100);
 
  //--- TTR 6 month plot below   
     var data = [
@@ -262,7 +370,8 @@ var layout = {
 Plotly.newPlot('dNAplot', data, layout);
 
 </script>
-
+</div>
+<div class="footer">Page <span class="pagenum"></span></div>
 </body>
 </html>
 
