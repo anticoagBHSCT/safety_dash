@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Safety Dashboard</title>
     <style>
+
+      .content {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+      }
+
       @media print {
+          .pagebreak { page-break-before: always; }
           .header {
               position: fixed;
               top: 0;
               left: 0;
               right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
               background-color: #f0f0f0; /* Customize header background color */
-              padding: 10px; /* Add padding for spacing */
-              text-align: center; /* Center-align header content */
+              padding: 5px; /* Add padding for spacing */
+              text-align: left; /* Center-align header content */
           }
 
           .footer {
@@ -21,6 +30,8 @@
               bottom: 0;
               left: 0;
               right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
               background-color: #f0f0f0; /* Customize footer background color */
               padding: 10px; /* Add padding for spacing */
               text-align: center; /* Center-align footer content */
@@ -49,38 +60,60 @@
 <body>
   <div class="header">Patient Safety Dashboard</div>
   <div class="content">
-    <table id="parameters">
+<!--Header-->
+    <%IncludeMessage(context, "[**Part**] Letter Header")%>
+    <hr>
+    <%IncludeMessage(context, "[**Part**] Name DOB HCN")%>(<%Day(Date())%> <%MonthName(Month(Date()))%> <%Year(Date())%>)
+<!--Header-->
+
+    <table id="parameters" hidden>
         <tr>
             <th>Parameter</th>
             <th>Value</th>
         </tr>
         <tr>
             <td>TTR6month</td>
-            <td>45</td>
+            <!-- <td>45</td> -->
+            <td><%IncludeMessage(context, "[**Part**] TIR 6 month")%></td>
         </tr>
         <tr>
             <td>TTR12month</td>
-            <td>70</td>
+            <!-- <td>70</td> -->
+            <td><%IncludeMessage(context, "[**Part**] 12 month TIR")%></td>
         </tr>
         <tr>
           <td>VGR 3 month</td>
-          <td>0.3</td>
+          <!-- <td>0.3</td> -->
+          <td><%IncludeMessage(context, "[**Part**] VGR")%></td>
         </tr>
         <tr>
             <td>DNAs 12 months</td>
-            <td>2</td>
+            <!-- <td>2</td> -->
+            <td><%IncludeMessage(context, "[**Part**] Non attendance count (12 month)")%></td>
         </tr>
         <tr>
           <td>INRs 12 months</td>
-          <td>40</td>
+          <!-- <td>40</td> -->
+          <td><%IncludeMessage(context, "[**Part**] INRs recorded (12 month)")%></td>
       </tr>
       <tr>
         <td>TTR start date</td>
-        <td>27/04/2023</td>
+        <!-- <td>2023-08-16</td> -->
+        <td><%IncludeMessage(context, "[**Part**] TIR Start Date")%></td>
+      </tr>
+      <tr>
+        <td>% Below</td>
+        <!-- <td>15</td> -->
+        <td><%IncludeMessage(context, "[**Part**] Percentage Below Range")%></td>
+      </tr>
+      <tr>
+        <td>% Above</td>
+        <!-- <td>15</td> -->
+        <td><%IncludeMessage(context, "[**Part**] Percentage Above Range")%></td>
       </tr>
     </table>
     <hr>
-<table>
+<table id="textinfo">
   <tr>
     <td>
       <p><b>Time in Therapeutic Range (TTR) 6 month</b></p>
@@ -90,8 +123,7 @@
       <!--This is the value table-->
       <table>
         <tr>
-          <td><small>INRs: 8</small></td>
-          <td><small>From: 28/09/2023</small></td>
+          <td><small>INR count: 8</small></td>
         </tr>
       </table>
     </td>
@@ -100,12 +132,11 @@
   <tr>
     <td>
       <p><b>Variance Growth Rate 3 month</b></p>
-      <p>The VGR measurements look at the variability between the INR values to determine how ‘stable’ they are. The VGR value increases when the difference betweem the recorded INRs to the target INR increases</p>
+      <p>The VGR measurement looks at the variability between the INR values to determine how 'stable' they are. The VGR value increases when the difference betweem the recorded INR to the target INR is greater.</p>
       <!--This is the value table-->
       <table>
         <tr>
-          <td></td>
-          <td></td>
+          <td><small>INR count: 8</small></td>
         </tr>
       </table>
     </td>
@@ -117,8 +148,7 @@
         <!--This is the value table-->
         <table>
           <tr>
-            <td></td>
-            <td></td>
+            <td><small>INR count: 8</small></td>
           </tr>
         </table>  
     </td>
@@ -131,12 +161,26 @@
       <!--This is the value table-->
       <table>
         <tr>
-          <td></td>
-          <td></td>
+          <td><small>INR count: 8</small></td>
         </tr>
       </table>
     </td>
     <td><div id="12monthplot"></div></td>
+  </tr>
+  <tr>
+    <td>
+      <p><b>Above or Below 12 month</b></p>
+       <p>This plot shows whether INRs tended to be more below or more above the target range for the past year.</p> 
+      <!--This is the value table-->
+      <table>
+        <tr>
+          <td><small>Above:</small></td>
+          <td><small>In:</small></td>
+          <td><small>Below:</small></td>
+        </tr>
+      </table>
+    </td>
+    <td><div id="abovebelowplot"></div></td>
   </tr>
   <tr>
     <td>
@@ -145,8 +189,7 @@
       <!--This is the value table-->
       <table>
         <tr>
-          <td></td>
-          <td></td>
+          <td><small>Did not attend:</small></td>
         </tr>
       </table>      
 
@@ -154,7 +197,7 @@
     <td><div id="dNAplot"></div></td>
   </tr>
 </table>
-
+<div class="pagebreak"></div>
 
 
     <script>
@@ -165,21 +208,26 @@
         var cell3 = table.rows[3].cells[1];
         var cell4 = table.rows[4].cells[1];
         var cell5 = table.rows[5].cells[1];
-        var cell6 = table.rows[6].cells[1]; 
+        var cell6 = table.rows[6].cells[1];
+        var cell7 = table.rows[7].cells[1];
+        var cell8 = table.rows[8].cells[1];
 
-        //--6 month TTR and 2 month VGR
+        //--6 month TTR and 3 month VGR
         var tir6 = cell1.textContent;
         var vgr = cell3.textContent;
     
-  
-//--prior 6 month and 12 month TTR only if 11 months data
-        const [day, month, year] = (cell6.textContent).split('/');
+        //--12 month TTR
+        var tir12 = cell2.textContent;
+         var below12 = cell7.textContent;
+         var above12 = cell8.textContent;
+
+//--prior 6 month and 12 month TTR only if 7 months data
+        const [year, month, day] = (cell6.textContent).split('-');
         const ttrstart = new Date(year, month-1, day);   
         var minus11months = new Date();
-          minus11months.setMonth(minus11months.getMonth()-11);
-
-        if(ttrstart < minus11months){
-         var tir12 = cell2.textContent;
+          minus11months.setMonth(minus11months.getMonth()-7);
+        
+          if(ttrstart < minus11months){
          var prior6TTR= (tir12*2)-tir6;        
         }
 
@@ -332,6 +380,58 @@ var layout = {
 };
 
 Plotly.newPlot('12monthplot', data, layout);
+
+//------Above/Below 12 month plot below
+
+var trace1 = {
+  x: [below12],
+  name: 'Below',
+  orientation: 'h',
+  marker: {
+    color: 'lightblue',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace2 = {
+  x: [tir12],
+  name: 'In',
+  orientation: 'h',
+  marker: {
+    color: 'lightgreen',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace3 = {
+  x: [above12],
+  name: 'Above',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'lightpink',
+    width: 1
+  }
+};
+
+var data = [trace1, trace2, trace3];
+
+var layout = {
+  width: 400,
+  height: 120,
+  margin: { t: 25, r: 50, l: 100, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" },
+  barmode: 'stack', 
+  xaxis: {ticksuffix:"%"}, 
+  yaxis: {visible: false}
+};
+
+Plotly.newPlot('abovebelowplot', data, layout);
+
+
 
 //------Non-attendances 12 month plot below
 var data = [
