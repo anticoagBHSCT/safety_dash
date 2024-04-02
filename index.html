@@ -1,75 +1,45 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Table Inside Div</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Table Inside Div</title>
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
 
-    <div id="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Header 1</th>
-                    <th>Header 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                </tr>
-                <!-- More rows can be added here -->
-            </tbody>
-        </table>
-    </div>
+    <div id="container">
+<%IncludeMessage(context, "[**Part**] INR and Dose History SQL 12 month")%>
+    </div>
+ <div id="plot"></div>
+    <script>
+        // Accessing the table
+        var containerDiv = document.getElementById('container');
+        var table = containerDiv.querySelector('table');
+   var data = [];
+    var rows = table.rows;
 
-    <script>
-        // Accessing the table
-        var containerDiv = document.getElementById('container');
-        var table = containerDiv.querySelector('table');
+    // Loop through rows excluding header
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var parts = (row.cells[0].textContent).split('/');
+var day = parseInt(parts[0], 10);
+var month = parseInt(parts[1], 10)-1;
+var year = parseInt(parts[2], 10);
+        var x = new Date(year, month, day); // Get X value
+var y = parseFloat(row.cells[1].textContent); // Get Y value
+        data.push({ x: x, y: y }); // Push data into array
+    }
 
-        // Example: Changing the background color of the first row
-        var firstRow = table.querySelector('tbody tr');
-        firstRow.style.backgroundColor = 'lightblue';
-    </script>
+    // Creating Plotly line graph
+    var trace = {
+        x: data.map(item => item.x), // Extract X values
+        y: data.map(item => item.y), // Extract Y values
+        mode: 'lines+markers',
+        type: 'scatter'
+    };
+    var layout = {
+        title: 'Line Graph from Table Data'
+    };
+    Plotly.newPlot('plot', [trace], layout);
+</script>
 
-<!-- <div id="plot"></div>
-
-<script>
-    // Accessing the table data
-    var table = document.getElementById('data-table');
-    var data = [];
-    var rows = table.rows;
-
-    // Loop through rows excluding header
-    for (var i = 1; i < rows.length; i++) {
-        var row = rows[i];
-        var x = parseFloat(row.cells[0].textContent); // Get X value
-        var y = parseFloat(row.cells[1].textContent); // Get Y value
-        data.push({ x: x, y: y }); // Push data into array
-    }
-
-    // Creating Plotly line graph
-    var trace = {
-        x: data.map(item => item.x), // Extract X values
-        y: data.map(item => item.y), // Extract Y values
-        mode: 'lines+markers',
-        type: 'scatter'
-    };
-    var layout = {
-        title: 'Line Graph from Table Data'
-    };
-    Plotly.newPlot('plot', [trace], layout);
-</script> -->
-
-
-
-
-
-
-
-
-</body>
-</html>
