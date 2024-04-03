@@ -1,45 +1,118 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Table Inside Div</title>
-   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
 
-    <div id="container">
-<%IncludeMessage(context, "[**Part**] INR and Dose History SQL 12 month")%>
-    </div>
- <div id="plot"></div>
-    <script>
-        // Accessing the table
-        var containerDiv = document.getElementById('container');
-        var table = containerDiv.querySelector('table');
-   var data = [];
-    var rows = table.rows;
+    <div id="container">
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>INR</th>
+            </tr>
+            <tr>
+                <td>06/03/2024</td>
+                <td>2.6</td>
+            </tr>
+            <tr>
+                <td>22/03/2024</td>
+                <td>4.5</td>
+            </tr>
+            <tr>
+                <td>03/04/2024</td>
+                <td>2.5</td>
+            </tr>
+        </table>
+        
+    </div>
 
-    // Loop through rows excluding header
-    for (var i = 1; i < rows.length; i++) {
-        var row = rows[i];
-        var parts = (row.cells[0].textContent).split('/');
+<div id="plot"></div>
+<script>
+// Accessing the table
+var containerDiv = document.getElementById('container');
+var table = containerDiv.querySelector('table');
+var data = [];
+var rows = table.rows;
+const currentdate = new Date();
+
+// Loop through rows excluding header
+for (var i = 1; i < rows.length; i++) {
+var row = rows[i];
+var parts = (row.cells[0].textContent).split('/');
 var day = parseInt(parts[0], 10);
 var month = parseInt(parts[1], 10)-1;
 var year = parseInt(parts[2], 10);
-        var x = new Date(year, month, day); // Get X value
+var x = new Date(year, month, day); // Get X value
 var y = parseFloat(row.cells[1].textContent); // Get Y value
-        data.push({ x: x, y: y }); // Push data into array
-    }
+data.push({ x: x, y: y }); // Push data into array
+}
 
-    // Creating Plotly line graph
-    var trace = {
-        x: data.map(item => item.x), // Extract X values
-        y: data.map(item => item.y), // Extract Y values
-        mode: 'lines+markers',
-        type: 'scatter'
-    };
-    var layout = {
-        title: 'Line Graph from Table Data'
-    };
-    Plotly.newPlot('plot', [trace], layout);
+// Creating Plotly line graph
+var trace = {
+x: data.map(item => item.x), // Extract X values
+y: data.map(item => item.y), // Extract Y values
+mode: 'lines+markers',
+type: 'scatter',
+marker: {
+    color: 'white',
+    size: 8, 
+    line: {
+      color: 'rgb(128, 0, 128)',
+      width: 1
+    }
+  },
+  line: {
+    color: 'rgb(128, 0, 128)',
+    width: 1, 
+    shape: 'spline',
+    dash: 'dot'
+  }
+};
+var layout = {
+title: 'Trend Graph',
+xaxis: {
+    title: 'Date', 
+    showgrid: true, 
+    zeroline: true
+}, 
+yaxis: {
+    title: 'INR',
+    range: [0, 8.0],
+    showgrid: true, 
+    zeroline: true, 
+}, 
+shapes: [
+    {
+      type: 'rect', // Indicates a horizontal line
+      x0: currentdate.setMonth(currentdate.getMonth()-12),
+      x1: new Date(),
+      y0: 2.5, // Y-coordinate of the reference line
+      y1: 3.5, // Y-coordinate of the reference line
+      fillcolor: 'lightgreen',
+      opacity: 0.25,
+      line: {
+        color: 'green', // Color of the reference line
+        width: 1, // Line width
+        dash: 'dash', // Line style (optional)
+      },
+    },
+  ],
+};
+Plotly.newPlot('plot', [trace], layout);
 </script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
 
