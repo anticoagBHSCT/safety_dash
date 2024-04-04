@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Safety Dashboard</title>
+    <title>VKA Dashboard</title>
     <style>
 
       .content {
@@ -58,7 +58,7 @@
 
 </head>
 <body>
-  <div class="header">Patient Safety Dashboard</div>
+  <div class="header">VKA Dashboard</div>
   <div class="content">
 <!--Header-->
     <%IncludeMessage(context, "[**Part**] Letter Header")%>
