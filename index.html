@@ -7,6 +7,17 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
+    <div id="plot"></div>
+    <table id="range" hidden>
+      <tr>
+        <td>uLimit</td>
+        <td>lLimit</td>
+      </tr>
+      <tr>
+        <td>3.5</td>
+        <td>2.5</td>
+      </tr>
+    </table>
 
     <div id="container">
         <table>
@@ -30,14 +41,20 @@
         
     </div>
 
-<div id="plot"></div>
+
 <script>
-// Accessing the table
+// Accessing the tables
 var containerDiv = document.getElementById('container');
 var table = containerDiv.querySelector('table');
 var data = [];
 var rows = table.rows;
 const currentdate = new Date();
+
+var rangetable = document.getElementById('range');
+var cell1 = rangetable.rows[1].cells[0];
+var cell2 = rangetable.rows[1].cells[1];
+var uLimit = cell1.textContent;
+var lLimit = cell2.textContent;
 
 // Loop through rows excluding header
 for (var i = 1; i < rows.length; i++) {
@@ -73,15 +90,17 @@ marker: {
   }
 };
 var layout = {
-title: 'Trend Graph',
+title: 'Trend Graph (12 month)',
+width: 800,
 xaxis: {
-    title: 'Date', 
+    title: 'Time', 
     showgrid: true, 
     zeroline: true
 }, 
 yaxis: {
     title: 'INR',
     range: [0, 8.0],
+    dtick: 1,
     showgrid: true, 
     zeroline: true, 
 }, 
@@ -90,8 +109,8 @@ shapes: [
       type: 'rect', // Indicates a horizontal line
       x0: currentdate.setMonth(currentdate.getMonth()-12),
       x1: new Date(),
-      y0: 2.5, // Y-coordinate of the reference line
-      y1: 3.5, // Y-coordinate of the reference line
+      y0: lLimit, // Y-coordinate of the reference line
+      y1: uLimit, // Y-coordinate of the reference line
       fillcolor: 'lightgreen',
       opacity: 0.25,
       line: {
@@ -101,15 +120,11 @@ shapes: [
       },
     },
   ],
-};
-Plotly.newPlot('plot', [trace], layout);
+}; 
+var config = {responsive: true}
+;
+Plotly.newPlot('plot', [trace], layout, config);
 </script>
-
-
-
-
-
-
 
 
 
