@@ -10,6 +10,7 @@
       .content {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
+
       }
       #stats {
         width: 600px;
@@ -29,6 +30,11 @@
       #stats td:first-child, #my-table th:first-child {
         border-left: none; /* Remove left border for first column */
   }
+
+          /* Optional: Add background color to alternate rows */
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
       @media print {
           .pagebreak { page-break-before: always; }
@@ -98,11 +104,11 @@
     <tbody>
         <tr>
             <td>TTR from:</td>
-            <td></td>
+            <td>2023-05-05</td>
         </tr>
         <tr>
             <td>TTR to:</td>
-            <td></td>
+            <td>2024-04-05</td>
         </tr>
       <tr>
         <td>Number of weeks</td>
@@ -110,7 +116,7 @@
     </tr>
         <tr>
           <td>Number of tests:</td>
-          <td></td>
+          <td>34</td>
       </tr>
       <tr>
         <td>Average tests per week:</td>
@@ -163,41 +169,59 @@
   <div class="pagebreak"></div>
 
   <script>
-var containerDiv = document.getElementById('TIRstartdatetable');
-var TIRstartdatetable = containerDiv.querySelector('table');
-var cell1 = TIRstartdatetable.rows[1].cells[0];
-alert(cell1.textContent);
-var containerDiv1 = document.getElementById('lastINRtable');
-var lastINRtable = containerDiv1.querySelector('table');
-var cell2 = lastINRtable.rows[1].cells[0];
-alert(cell2.textContent);
-var containerDiv2 = document.getElementById('noteststable');
-var noteststable = containerDiv2.querySelector('table');
-var cell3 = noteststable.rows[1].cells[0];
-alert(cell3.textContent);
+// var containerDiv = document.getElementById('TIRstartdatetable');
+// var TIRstartdatetable = containerDiv.querySelector('table');
+// var cell1 = TIRstartdatetable.rows[1].cells[0];
+// alert(cell1.textContent);
+// var containerDiv1 = document.getElementById('lastINRtable');
+// var lastINRtable = containerDiv1.querySelector('table');
+// var cell2 = lastINRtable.rows[1].cells[0];
+// alert(cell2.textContent);
+// var containerDiv2 = document.getElementById('noteststable');
+// var noteststable = containerDiv2.querySelector('table');
+// var cell3 = noteststable.rows[1].cells[0];
+// alert(cell3.textContent);
 
 
 
 
     var s_table = document.getElementById('stats');
-    // var cell1 = s_table.rows[1].cells[1]; // Second row, second column
-    // var cell2 = s_table.rows[2].cells[1];
-    // var cell3 = s_table.rows[4].cells[1];
+
+///comment out
+    var cell1 = s_table.rows[1].cells[1]; // Second row, second column
+    var cell2 = s_table.rows[2].cells[1];
+    var cell3 = s_table.rows[4].cells[1];
+///
     const [year, month, day] = (cell1.textContent).split('-');
     const [year1, month1, day1] = (cell2.textContent).split('-');
     const ttrstart = new Date(year, month-1, day);  
     const lastINR = new Date (year1, month1-1, day1);
     const timeDifferenceMs = lastINR - ttrstart;
     const weeks = Math.floor(timeDifferenceMs / 604800000);    
-    const tests = parseFloat(cell3.textContent);
-    const row = s_table.getElementsByTagName("tr")[3];
-    const td = row.getElementsByTagName("td")[1];
-    td.innerHTML = (Math.round((weeks)*100))/100;
-    const row1 = s_table.getElementsByTagName("tr")[5];
-    const td1 = row1.getElementsByTagName("td")[1];
-    td1.innerHTML = (Math.round((weeks/tests)*100))/100;
+    const tests = parseInt(cell3.textContent);
+    alert(tests);
 
-    console.log(ttrstart, lastINR, tests);
+    const row = s_table.getElementsByTagName("tr")[1];
+    const td = row.getElementsByTagName("td")[1];
+    td.innerHTML = cell1.textContent;
+
+    const row1 = s_table.getElementsByTagName("tr")[2];
+    const td1 = row1.getElementsByTagName("td")[1];
+    td1.innerHTML = cell2.textContent;
+
+    const row2 = s_table.getElementsByTagName("tr")[4];
+    const td2 = row2.getElementsByTagName("td")[1];
+    td2.innerHTML = cell3.textContent;
+
+    const row3 = s_table.getElementsByTagName("tr")[3];
+    const td3 = row3.getElementsByTagName("td")[1];
+    td3.innerHTML = (Math.round((weeks)*100))/100;
+
+    const row4 = s_table.getElementsByTagName("tr")[5];
+    const td4 = row4.getElementsByTagName("td")[1];
+    td4.innerHTML = (Math.round((weeks/tests)*100))/100;
+
+
 
 </script>
 </div>
