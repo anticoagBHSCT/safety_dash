@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VKA Dashboard</title>
+    <style>
+
+
+      .content {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+      }
+      #stats {
+        width: 600px;
+        border-collapse: separate;
+        border: 2px solid lightgreen;
+        border-radius: 10px; /* Adjust the radius as desired */
+      }
+      #stats th, #my-table td {
+        border-left: 2px solid lightyellow;
+        border-top: 2px solid lightyellow;
+        padding: 10px; /* Add padding for cell content */
+  }
+      #stats th {
+        background-color: lightyellow;
+        border-top: none; /* Remove top border for header cells */
+  }
+      #stats td:first-child, #my-table th:first-child {
+        border-left: none; /* Remove left border for first column */
+  }
+
+      @media print {
+          .pagebreak { page-break-before: always; }
+          .header {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
+              background-color: #f0f0f0; /* Customize header background color */
+              padding: 5px; /* Add padding for spacing */
+              text-align: left; /* Center-align header content */
+          }
+
+          .footer {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
+              background-color: #f0f0f0; /* Customize footer background color */
+              padding: 10px; /* Add padding for spacing */
+              text-align: center; /* Center-align footer content */
+          }
+      }
+      @media screen {
+          .header,
+          .footer {
+              display: none;
+          }
+      }
+  </style>
+    <script>
+      window.onload = function () {
+          const pageNums = document.querySelectorAll('.pagenum');
+          pageNums.forEach((el, index) => {
+              el.textContent = index + 1;
+          });
+      };
+  </script>
+  <!-- Plotly CDN -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+
+</head>
+<body>
+  <div class="header">VKA Dashboard</div>
+  <div class="content">
+<!--Header-->
+<%IncludeMessage(context, "[**Part**] Letter Header")%>
+<hr>
+<%IncludeMessage(context, "[**Part**] Name DOB HCN")%>(<%Day(Date())%> <%MonthName(Month(Date()))%> <%Year(Date())%>)
+<!--Header-->
+<hr>
+
+<table id="stats">
+    <thead>
+        <tr>
+            <th>Statistics</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>TTR from:</td>
+            <td>2023-04-05</td>
+        </tr>
+        <tr>
+            <td>TTR to:</td>
+            <td>2024-05-05</td>
+        </tr>
+      <tr>
+        <td>Number of weeks</td>
+        <td></td>
+    </tr>
+        <tr>
+          <td>Number of tests:</td>
+          <td>9</td>
+      </tr>
+      <tr>
+        <td>Average tests per week:</td>
+        <td>4</td>
+    </tr>
+    <tr>
+      <td>Target INR:</td>
+      <td>5</td>
+  </tr>
+  <tr>
+    <td>Target range max. (INR):</td>
+    <td>6</td>
+</tr>
+<tr>
+  <td>Target range min. (INR):</td>
+  <td>7</td>
+</tr>
+  <tr>
+    <td>Average INR:</td>
+    <td>8.5</td>
+</tr>
+<tr>
+  <td>Standard deviation (INR):</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>INRs greater than 5:</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>INRs greater than 8:</td>
+  <td>11</td>
+</tr>
+<tr>
+  <td>Highest INR:</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>Lowest INR:</td>
+  <td>13</td>
+</tr>
+<tr>
+  <td>Recorded non attendances:</td>
+  <td>14</td>
+</tr>
+
+    </tbody>
+  </table>
+  
+  <div class="pagebreak"></div>
+
+  <script>
+
+    var s_table = document.getElementById('stats');
+    var cell1 = s_table.rows[1].cells[1]; // Second row, second column
+    var cell2 = s_table.rows[2].cells[1];
+    var cell3 = s_table.rows[4].cells[1];
+    const [year, month, day] = (cell1.textContent).split('-');
+    const [year1, month1, day1] = (cell2.textContent).split('-');
+    const ttrstart = new Date(year, month-1, day);  
+    const lastINR = new Date (year1, month1-1, day1);
+    const timeDifferenceMs = lastINR - ttrstart;
+    const weeks = Math.floor(timeDifferenceMs / 604800000);    
+    const tests = parseFloat(cell3.textContent);
+    const row = s_table.getElementsByTagName("tr")[3];
+    const td = row.getElementsByTagName("td")[1];
+    td.innerHTML = (Math.round((weeks)*100))/100;
+    const row1 = s_table.getElementsByTagName("tr")[5];
+    const td1 = row1.getElementsByTagName("td")[1];
+    td1.innerHTML = (Math.round((weeks/tests)*100))/100;
+
+</script>
+</div>
+<div class="footer">Page <span class="pagenum"></span></div>
+</body>
+</html>

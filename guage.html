@@ -6,11 +6,12 @@
     <title>VKA Dashboard</title>
     <style>
 
+
       .content {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
       }
-
+      
       @media print {
           .pagebreak { page-break-before: always; }
           .header {
@@ -111,6 +112,11 @@
         <!-- <td>15</td> -->
         <td><%IncludeMessage(context, "[**Part**] Percentage Above Range")%></td>
       </tr>
+      <tr>
+        <td>INRs 6 month</td>
+        <!-- <td><%IncludeMessage(context, "[**Part**] 6 month TIR Count of INRs")%></td>  -->
+        <td>12</td> 
+      </tr>
     </table>
     <hr>
 <table id="textinfo">
@@ -197,6 +203,7 @@
     <td><div id="dNAplot"></div></td>
   </tr>
 </table>
+
 <div class="pagebreak"></div>
 
 
@@ -211,6 +218,7 @@
         var cell6 = table.rows[6].cells[1];
         var cell7 = table.rows[7].cells[1];
         var cell8 = table.rows[8].cells[1];
+        var cell9 = table.rows[9].cells[1];
 
         //--6 month TTR and 3 month VGR
         var tir6 = cell1.textContent;
@@ -233,10 +241,12 @@
 
 //--this block for attendance        
         var inr12 = parseInt(cell5.textContent);  
-        var dna12 = parseInt(cell4.textContent);      
+        var dna12 = parseInt(cell4.textContent);
+        var inr6 = parseInt(cell9.textContent);      
         var att = inr12/(inr12+dna12)*100;
 
-        var avweek = (Math.round((inr12/52)*100)/100);
+        var avweek = (Math.round((inr6/26)*100)/100);
+
 
  //--- TTR 6 month plot below   
     var data = [
