@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VKA Dashboard</title>
-    <style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>VKA Dashboard</title>
+ <style>
+
+ .content {
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 0.9rem;
+}
+
+#stats {
+ width: 600px;
+ border-collapse: separate;
+ border: 2px solid lightgreen;
+ border-radius: 10px; /* Adjust the radius as desired */
+ }
+ #stats th, #my-table td {
+ border-left: 2px solid lightyellow;
+ border-top: 2px solid lightyellow;
+ padding: 10px; /* Add padding for cell content */
+ }
+ #stats th {
+ background-color: lightyellow;
+ border-top: none; /* Remove top border for header cells */
+ }
+ #stats td:first-child, #my-table th:first-child {
+ border-left: none; /* Remove left border for first column */
+ }
+
+ /* Optional: Add background color to alternate rows */
+ #stats tr:nth-child(even) {
+ background-color: #f2f2f2;
+ }
 
 
-      .content {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.9rem;
-
-      }
-      #stats {
-        width: 600px;
-        border-collapse: separate;
-        border: 2px solid lightgreen;
-        border-radius: 10px; /* Adjust the radius as desired */
-      }
-      #stats th, #my-table td {
-        border-left: 2px solid lightyellow;
-        border-top: 2px solid lightyellow;
-        padding: 10px; /* Add padding for cell content */
-  }
-      #stats th {
-        background-color: lightyellow;
-        border-top: none; /* Remove top border for header cells */
-  }
-      #stats td:first-child, #my-table th:first-child {
-        border-left: none; /* Remove left border for first column */
-  }
-
-          /* Optional: Add background color to alternate rows */
-          tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-      @media print {
+ @media print {
           .pagebreak { page-break-before: always; }
           .header {
               position: fixed;
@@ -61,165 +61,161 @@
               padding: 10px; /* Add padding for spacing */
               text-align: center; /* Center-align footer content */
           }
-      }
-      @media screen {
-          .header,
-          .footer {
-              display: none;
-          }
-      }
-  </style>
-    <script>
-      window.onload = function () {
-          const pageNums = document.querySelectorAll('.pagenum');
-          pageNums.forEach((el, index) => {
-              el.textContent = index + 1;
-          });
-      };
-  </script>
-  <!-- Plotly CDN -->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    
-
+ }
+ @media screen {
+ .header,
+ .footer {
+ display: none;
+ }
+ }
+ </style>
+ <script>
+ window.onload = function () {
+ const pageNums = document.querySelectorAll('.pagenum');
+ pageNums.forEach((el, index) => {
+ el.textContent = index + 1;
+ });
+ };
+ </script>
+ <!-- Plotly CDN -->
+ <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+ 
 </head>
 <body>
-  <div class="header">VKA Dashboard</div>
-  <div class="content">
+ <div class="header">VKA Dashboard</div>
+ <div class="content">
 <!--Header-->
-<%IncludeMessage(context, "[**Part**] Letter Header")%>
-<hr>
-<%IncludeMessage(context, "[**Part**] Name DOB HCN")%>(<%Day(Date())%> <%MonthName(Month(Date()))%> <%Year(Date())%>)
-<!--Header-->
-<hr>
-<div id="lastINRtable" hidden></div>
-<div id="TIRstartdatetable" hidden></div>
-<div id="noteststable" hidden></div>
+ <%IncludeMessage(context, "[**Part**] Letter Header")%>
+ <hr>
+ <%IncludeMessage(context, "[**Part**] Name DOB HCN")%>(<%Day(Date())%> <%MonthName(Month(Date()))%> <%Year(Date())%>)
+ <hr>
+
+<div id="lastINRtable" hidden><%IncludeMessage(context, "[**Part**] Last INR Date")%></div>
+<div id="TIRstartdatetable" hidden><%IncludeMessage(context, "[**Part**] TIR Start Date")%></div>
+<div id="noteststable" hidden><%IncludeMessage(context, "[**Part**] INRs recorded (12 month)")%></div>
 <table id="stats">
-    <thead>
-        <tr>
-            <th>Statistics</th>
-            <th>Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>TTR from:</td>
-            <td>2023-05-05</td>
-        </tr>
-        <tr>
-            <td>TTR to:</td>
-            <td>2024-04-05</td>
-        </tr>
-      <tr>
-        <td>Number of weeks</td>
-        <td></td>
-    </tr>
-        <tr>
-          <td>Number of tests:</td>
-          <td>34</td>
-      </tr>
-      <tr>
-        <td>Average tests per week:</td>
-        <td></td>
-    </tr>
-    <tr>
-      <td>Target INR:</td>
-      <td></td>
-  </tr>
-  <tr>
-    <td>Target range max. (INR):</td>
-    <td></td>
+ <thead>
+ <tr>
+ <th>TTR statistics</th>
+ <th>Value</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>TTR from:</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>TTR to:</td>
+ </tr>
+ <tr>
+ <td>Number of weeks</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>Number of tests:</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>Average tests per week:</td>
+ <td></td>
+ </tr>
+ <tr>
+ <td>Target INR:</td>
+ <td><%IncludeMessage(context, "[**Part**] Target INR")%></td>
+ </tr>
+ <tr>
+ <td>Target range max. (INR):</td>
+ <td><%IncludeMessage(context, "[**Part**] Upper INR Limit")%></td>
 </tr>
 <tr>
-  <td>Target range min. (INR):</td>
-  <td></td>
+ <td>Target range min. (INR):</td>
+ <td><%IncludeMessage(context, "[**Part**] Lower INR Limit")%></td>
 </tr>
-  <tr>
-    <td>Average INR:</td>
-    <td></td>
-</tr>
-<tr>
-  <td>Standard deviation (INR):</td>
-  <td></td>
+ <tr>
+ <td>Average INR:</td>
+ <td><%IncludeMessage(context, "[**Part**] Average INR (12 month)")%></td>
 </tr>
 <tr>
-  <td>INRs greater than 5:</td>
-  <td></td>
+ <td>Standard deviation (INR):</td>
+ <td><%IncludeMessage(context, "[**Part**] Standard Deviation INR (12 month)")%></td>
 </tr>
 <tr>
-  <td>INRs greater than 8:</td>
-  <td></td>
+ <td>INRs greater than 5:</td>
+ <td><%IncludeMessage(context, "[**Part**] INRs over 5 count (12 month)")%></td>
 </tr>
 <tr>
-  <td>Highest INR:</td>
-  <td></td>
+ <td>INRs greater than 8:</td>
+ <td><%IncludeMessage(context, "[**Part**] INRs over 8 count (12 month)")%></td>
 </tr>
 <tr>
-  <td>Lowest INR:</td>
-  <td></td>
+ <td>Highest INR:</td>
+ <td><%IncludeMessage(context, "[**Part**] Highest INR (12 month)")%></td>
 </tr>
 <tr>
-  <td>Recorded non attendances:</td>
-  <td></td>
+ <td>Lowest INR:</td>
+ <td><%IncludeMessage(context, "[**Part**] Lowet INR (12 month)")%></td>
+</tr>
+<tr>
+ <td>Current clinic:</td>
+ <td><%DataField("ClinicDescription")%></td>
+</tr>
+<tr>
+ <td>Recorded non attendances:</td>
+ <td><%IncludeMessage(context, "[**Part**] Non attendance count (12 month)")%></td>
 </tr>
 
-    </tbody>
-  </table>
-  
-  <div class="pagebreak"></div>
+ </tbody>
+ </table>
+ 
+ <div class="pagebreak"></div>
 
-  <script>
-// var containerDiv = document.getElementById('TIRstartdatetable');
-// var TIRstartdatetable = containerDiv.querySelector('table');
-// var cell1 = TIRstartdatetable.rows[1].cells[0];
-// alert(cell1.textContent);
-// var containerDiv1 = document.getElementById('lastINRtable');
-// var lastINRtable = containerDiv1.querySelector('table');
-// var cell2 = lastINRtable.rows[1].cells[0];
-// alert(cell2.textContent);
-// var containerDiv2 = document.getElementById('noteststable');
-// var noteststable = containerDiv2.querySelector('table');
-// var cell3 = noteststable.rows[1].cells[0];
-// alert(cell3.textContent);
+<script>
+var containerDiv = document.getElementById('TIRstartdatetable');
+var TIRstartdatetable = containerDiv.querySelector('table');
+var cell1 = TIRstartdatetable.rows[1].cells[0];
 
+var containerDiv1 = document.getElementById('lastINRtable');
+var lastINRtable = containerDiv1.querySelector('table');
+var cell2 = lastINRtable.rows[1].cells[0];
+
+var containerDiv2 = document.getElementById('noteststable');
+var noteststable = containerDiv2.querySelector('table');
+var cell3 = noteststable.rows[1].cells[0];
 
 
+ var s_table = document.getElementById('stats');
+ // var cell1 = s_table.rows[1].cells[1]; // Second row, second column
+ // var cell2 = s_table.rows[2].cells[1];
+ // var cell3 = s_table.rows[4].cells[1];
+ const [year, month, day] = (cell1.textContent).split('-');
+ const [year1, month1, day1] = (cell2.textContent).split('-');
+ const ttrstart = new Date(year, month-1, day);  
+ const lastINR = new Date (year1, month1-1, day1);
+ const timeDifferenceMs = lastINR - ttrstart;
+ const weeks = Math.floor(timeDifferenceMs / 604800000);    
+ const tests = parseInt(cell3.textContent);
 
-    var s_table = document.getElementById('stats');
+const row = s_table.getElementsByTagName("tr")[1];
+const td = row.getElementsByTagName("td")[1];
+td.innerHTML = cell1.textContent;
 
-///comment out
-    var cell1 = s_table.rows[1].cells[1]; // Second row, second column
-    var cell2 = s_table.rows[2].cells[1];
-    var cell3 = s_table.rows[4].cells[1];
-///
-    const [year, month, day] = (cell1.textContent).split('-');
-    const [year1, month1, day1] = (cell2.textContent).split('-');
-    const ttrstart = new Date(year, month-1, day);  
-    const lastINR = new Date (year1, month1-1, day1);
-    const timeDifferenceMs = lastINR - ttrstart;
-    const weeks = Math.floor(timeDifferenceMs / 604800000);    
-    const tests = parseInt(cell3.textContent);
-    alert(tests);
+const row1 = s_table.getElementsByTagName("tr")[2];
+const td1 = row1.getElementsByTagName("td")[1];
+td1.innerHTML = cell2.textContent;
 
-    const row = s_table.getElementsByTagName("tr")[1];
-    const td = row.getElementsByTagName("td")[1];
-    td.innerHTML = cell1.textContent;
+const row2 = s_table.getElementsByTagName("tr")[4];
+const td2 = row2.getElementsByTagName("td")[1];
+td2.innerHTML = cell3.textContent;
 
-    const row1 = s_table.getElementsByTagName("tr")[2];
-    const td1 = row1.getElementsByTagName("td")[1];
-    td1.innerHTML = cell2.textContent;
+    const row3 = s_table.getElementsByTagName("tr")[3];
+const td3 = row3.getElementsByTagName("td")[1];
+td3.innerHTML = (Math.round((weeks)*100))/100;
 
-    const row2 = s_table.getElementsByTagName("tr")[4];
-    const td2 = row2.getElementsByTagName("td")[1];
-    td2.innerHTML = cell3.textContent;
+const row4 = s_table.getElementsByTagName("tr")[5];
+const td4 = row4.getElementsByTagName("td")[1];
+td4.innerHTML = (1/((Math.round((weeks/tests)*100))/100)).toFixed(2);
 
-    const row3 = s_table.getElementsByTagName("tr")[3];
-    const td3 = row3.getElementsByTagName("td")[1];
-    td3.innerHTML = (Math.round((weeks)*100))/100;
-
-    const row4 = s_table.getElementsByTagName("tr")[5];
-    const td4 = row4.getElementsByTagName("td")[1];
-    td4.innerHTML = (Math.round((weeks/tests)*100))/100;
 
 
 

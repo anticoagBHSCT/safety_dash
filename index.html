@@ -5,6 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VKA Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+
+
+      .content {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+      }
+      #container table {
+ width: 300px;
+ border-collapse: separate;
+ border: 2px solid lightgreen;
+ border-radius: 7px; 
+ }
+#container td {
+padding: 10px;
+}
+      @media print {
+          .pagebreak { page-break-before: always; }
+          .header {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
+              background-color: #f0f0f0; /* Customize header background color */
+              padding: 5px; /* Add padding for spacing */
+              text-align: left; /* Center-align header content */
+          }
+
+          .footer {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 0.5rem;
+              background-color: #f0f0f0; /* Customize footer background color */
+              padding: 10px; /* Add padding for spacing */
+              text-align: center; /* Center-align footer content */
+          }
+      }
+      @media screen {
+          .header,
+          .footer {
+              display: none;
+          }
+      }
+  </style>
 </head>
 <body>
     <div id="plot"></div>
