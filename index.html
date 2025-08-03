@@ -14,12 +14,24 @@
       }
       #container table {
  width: 300px;
+  margin-left: 30px;;
  border-collapse: separate;
  border: 2px solid lightgreen;
  border-radius: 7px; 
  }
-#container td {
+#container {
+font-family: Arial, Helvetica, sans-serif;
+font-size: 0.75rem;
 padding: 10px;
+}
+
+#info li {
+    list-style-type: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    padding: 5px;
+    margin: 0;  
+
 }
       @media print {
           .pagebreak { page-break-before: always; }
@@ -57,6 +69,16 @@ padding: 10px;
 </head>
 <body>
     <div id="plot"></div>
+    <div id="info">
+      <ul>
+        <li>Anticoagulant: Warfarin</li>
+        <li>Indication: Aortic Valve Replacement Mechanical (On-X&#174; valve)</li>
+        <li>Target INR range: 1.8 to 2.0</li>
+        <li>INR Green Zone: 1.5 to 2.5</li>
+        <li>Green Zone TTR (6 month):</li>
+        <li>VGR (3 month):</li>
+      </ul>
+    </div>
     <table id="range" hidden>
       <tr>
         <td>uLimit</td>
