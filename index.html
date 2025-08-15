@@ -14,7 +14,8 @@
       }
       #container table {
  width: 300px;
-  margin-left: 30px;;
+  margin-left: 30px;
+  padding-left: 5px;;
  border-collapse: separate;
  border: 2px solid lightgreen;
  border-radius: 7px; 
@@ -74,9 +75,12 @@ padding: 10px;
         <li>Anticoagulant: Warfarin</li>
         <li>Indication: Aortic Valve Replacement Mechanical (On-X&#174; valve)</li>
         <li>Target INR range: 1.8 to 2.0</li>
-        <li>INR Green Zone: 1.5 to 2.5</li>
-        <li>Green Zone TTR (6 month):</li>
-        <li>VGR (3 month):</li>
+        <li>INR Green Zone: 1.5 to 2.5
+          <li>Wthin the Green Zone we recommend either to not adjust or only a small adjustment to the weekly warfarin dose (if warfarin home-management trained).</li>
+        </li>
+        <li>Green Zone TTR (last 6 months):<div id="6monthplot"></div></li>
+        <li>Green Zone TTR (last 12 months):<div id="12monthplot"></div></li>
+        <li>This plot shows whether INRs tended to be more below or more above the target range in the last 12 months<div id="abovebelowplot"></div></li>
       </ul>
     </div>
     <table id="range" hidden>
@@ -161,7 +165,13 @@ marker: {
   }
 };
 var layout = {
-title: 'Trend Graph (12 month)',
+title: {
+    text: 'INR Trend Graph (12 month)',
+    font: {
+        size: 12,
+        color: 'black'
+    }
+},
 width: 800,
 xaxis: {
     title: 'Time', 
@@ -195,10 +205,125 @@ shapes: [
 var config = {responsive: true}
 ;
 Plotly.newPlot('plot', [trace], layout, config);
+
+//--- TTR 6 month plot below   
+    var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: 4,
+    number: {suffix:"%", valueformat: '.0f'},
+    delta: { reference: 2, increasing: { color: "Green"}, decreasing: { color: "Pink"}, relative:true },
+    gauge: {
+      shape: "bullet",
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 52], color: "lightpink" },
+        { range: [53, 72], color: "lightyellow" },
+        { range: [73, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 250,
+  height: 60,
+  margin: { t: 10, r: 0, l: 20, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('6monthplot', data, layout);
+
+//------TTR 12 month plot below
+
+var data = [
+  {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: 5,
+    number: {suffix:"%", valueformat: '.0f'},
+    gauge: {
+      shape: "bullet",
+      axis: { range: [null, 100], tickwidth: 1, tickcolor: "darkblue", ticksuffix:"%" },
+      bar: { color: "green" },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+      { range: [0, 52], color: "lightpink" },
+        { range: [53, 72], color: "lightyellow" },
+        { range: [73, 100], color: "lightgreen" }
+      ]
+    }
+  }
+];
+
+var layout = {
+  width: 250,
+  height: 60,
+  margin: { t: 10, r: 0, l: 20, b: 25 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial" }
+};
+
+Plotly.newPlot('12monthplot', data, layout);
+
+//------Above/Below 12 month plot below
+
+var trace1 = {
+  x: [10],
+  name: 'Below',
+  orientation: 'h',
+  marker: {
+    color: 'lightblue',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace2 = {
+  x: [80],
+  name: 'In',
+  orientation: 'h',
+  marker: {
+    color: 'lightgreen',
+    width: 1
+  },
+  type: 'bar'
+};
+
+var trace3 = {
+  x: [10],
+  name: 'Above',
+  orientation: 'h',
+  type: 'bar',
+  marker: {
+    color: 'lightpink',
+    width: 1
+  }
+};
+
+var data = [trace1, trace2, trace3];
+
+var layout = {
+  width: 250,
+  height: 92,
+  margin: { t: 10, r: 0, l: 20, b: 20 },
+  paper_bgcolor: "white",
+  font: { color: "black", family: "Arial", size: 10 },
+  barmode: 'stack', 
+  xaxis: {ticksuffix:"%"}, 
+  yaxis: {visible: false}
+};
+
+Plotly.newPlot('abovebelowplot', data, layout);
 </script>
-
-
-
 </body>
 </html>
 
