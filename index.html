@@ -69,18 +69,25 @@ padding: 10px;
   </style>
 </head>
 <body>
-    <div id="plot"></div>
+    
     <div id="info">
       <ul>
+        <li>INR self-management six month report.</li>
+        <li>Patient: John Doe</li>
         <li>Anticoagulant: Warfarin</li>
         <li>Indication: Aortic Valve Replacement Mechanical (On-X&#174; valve)</li>
         <li>Target INR range: 1.8 to 2.0</li>
-        <li>INR Green Zone: 1.5 to 2.5
-          <li>Wthin the Green Zone we recommend either to not adjust or only a small adjustment to the weekly warfarin dose (if warfarin home-management trained).</li>
+        <div id="plot"></div>
+        <li>Wthin the Green Zone (2.5 to 3.5 Target 3.0) of the INR self-management dosing table we recommend either to not adjust or only a small adjustment to the weekly warfarin dose. </br>The Green Zone range may be different from the prescribed INR target range above.</li>
         </li>
+      </ul>
+      <ul>
+        <li>'TTR' or 'Time in Therapeutic Range' is a measure of how effectively controlled anticoagualtion has been over a period of time. Ideally if INRs were always in range the TTR wold be 100% but due to the nature of anticoagulants this is not usually possible.</li>
         <li>Green Zone TTR (last 6 months):<div id="6monthplot"></div></li>
         <li>Green Zone TTR (last 12 months):<div id="12monthplot"></div></li>
-        <li>This plot shows whether INRs tended to be more below or more above the target range in the last 12 months<div id="abovebelowplot"></div></li>
+        <li>This plot shows whether INRs tended to be more below or more above the target range in the last 12 months.<div id="abovebelowplot"></div></br></br></li>
+        <li>If you have any queries regarding the above information please do not hesitate to get in contact.</li>
+        <li>Report compiled: 18 August 2025</li>
       </ul>
     </div>
     <table id="range" hidden>
